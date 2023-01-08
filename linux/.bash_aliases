@@ -3,7 +3,7 @@ alias init='sudo apt update -y && sudo apt upgrade -y && sudo timedatectl set-ti
 alias download='git clone https://github.com/jangdokang/TradingHook.git'
 alias venv='cd ~ && python3 -m venv ~/TradingHook/.venv'
 alias activate='source ~/TradingHook/.venv/bin/activate'
-alias setup='tpython -m pip install -r ~/TradingHook/requirements.txt'
+alias setup='python -m pip install -r ~/TradingHook/requirements.txt'
 alias start='quit ; cd ~/TradingHook && sudo pm2 start ~/TradingHook/run.py --interpreter ~/TradingHook/.venv/bin/python --name tradinghook -- --port=80 && monitor'
 alias start-test='activate && cd ~/TradingHook && tpython ~/TradingHook/run.py --port=80'
 
