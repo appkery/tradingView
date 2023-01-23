@@ -1,6 +1,10 @@
-from pydantic import BaseModel, BaseSettings, Field, validator
-from typing import Literal
+from __future__ import annotations
+
 import os
+from typing import Literal
+
+from pydantic import BaseModel, BaseSettings, validator
+
 env = "dev" if os.path.exists("dev.env") else "prod"
 
 
@@ -46,8 +50,10 @@ class MarketOrder(OrderBase):
     price: float | None = None
     type: Literal["MARKET"] = "MARKET"
 
+
 class MarketBuyOrder(MarketOrder):
     side: Literal['BUY'] = "BUY"
+
 
 class MarketSellOrder(MarketOrder):
     price: float = None

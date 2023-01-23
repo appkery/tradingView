@@ -1,15 +1,18 @@
 # version 0.0.4
+from __future__ import annotations
+
+from fastapi import FastAPI, HTTPException, Request, status
 from fastapi.exception_handlers import (
     request_validation_exception_handler,
 )
-from fastapi import FastAPI, Depends, HTTPException, Request, status
-from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse, RedirectResponse
 from requests import request
+
 from exchange import Upbit, Binance
 from model import MarketOrder, BaseModel
-from utility import settings, log_message, log_order_message, log_alert_message, print_alert_message, logger_test, log_order_error_message, log_validation_error_message
-
+from utility import settings, log_message, log_order_message, log_alert_message, print_alert_message, logger_test, \
+    log_order_error_message, log_validation_error_message
 
 app = FastAPI()
 
@@ -38,19 +41,19 @@ async def settings_whitelist_middleware(request: Request, call_next):
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
-    msgs = [f"[에러{index+1}] "+ f"{error.get('msg')} \n{error.get('loc')}"
+    msgs = [f"[에러{index + 1}] " + f"{error.get('msg')} \n{error.get('loc')}"
             for index, error in enumerate(exc.errors())]
     message = "[Error]\n"
     for msg in msgs:
-        message = message+msg+"\n"
-    
+        message = message + msg + "\n"
+
     log_validation_error_message(f"{message}\n {exc.body}")
     return await request_validation_exception_handler(request, exc)
 
 
 def check_key(exchange_name):
-    key = settings.dict().get(exchange_name+"_KEY")
-    secret = settings.dict().get(exchange_name+"_SECRET")
+    key = settings.dict().get(exchange_name + "_KEY")
+    secret = settings.dict().get(exchange_name + "_SECRET")
     if not key:
         msg = f"{exchange_name}_KEY가 없습니다"
         log_message(msg)
@@ -71,21 +74,23 @@ async def get_ip():
     return data
 
 
-@ app.get("/hi")
+@app.get("/hi")
 async def welcome():
     return "hi!!"
 
-@ app.get("/test")
+
+@app.get("/test")
 async def welcome():
     logger_test()
     return "test"
 
-@ app.get("/honey")
+
+@app.get("/honey")
 async def welcome():
     return RedirectResponse("https://finlife.fss.or.kr/deposit/selectDeposit.do?menuId=2000100")
 
 
-@ app.post("/order")
+@app.post("/order")
 async def order(order_info: MarketOrder):
     result = None
     try:
